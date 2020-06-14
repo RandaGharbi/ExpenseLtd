@@ -67,7 +67,11 @@ const claimLogic = kea({
 
       },
       deleteClaimer: async ({ name }) => {
-        await api.delete('/randagharbi/Claimers', { data: { name } })
+        try{
+        await api.post('/randagharbi/Claimers', { data: { name } })
+        }catch(e){
+          console.log('errr',e)
+        }
 
     },
       updateClaimer: async ({ claimer }) => {

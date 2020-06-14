@@ -7,6 +7,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import { useValues, useActions } from 'kea';
 import claimLogic from "../../Logic";
 
@@ -93,9 +96,25 @@ export default function List() {
                     const value = row[column.id];
                     if (column.id=== "actions") {
                       return (
-                        <button onClick={() => deleteClaimer({ name: row.name })}>
-                          delete
-                        </button>
+                        <div>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          endIcon={<EditIcon />}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<DeleteIcon />}
+                          onClick={() => deleteClaimer({ name: row.name })}
+                        >
+                          Delete
+                        </Button>
+                      </div>
                       )
                     } 
                     return (
