@@ -11,6 +11,10 @@ import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import { useActions, useValues } from 'kea';
 import claimLogic from "../../Logic";
+import {
+  Link
+} from "react-router-dom";
+
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -20,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
     width: '25%',
     height: '35rem',
     margin: 'auto',
-    top: '6rem',
     border: '1px solid #0000002e'
   },
   switch: {
@@ -51,10 +54,9 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginLeft: '70%',
   },
-  costum: {
-
-  },
   formWrapper: {
+    position:'relative',
+    top: '6rem',
     textAlign: 'center'
   }
 }));
@@ -80,6 +82,15 @@ export default () => {
 
   return (
     <div>
+            <Link to="/" className={classes.link}>
+      <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+        >
+          Back Home
+  </Button>
+  </Link>
       {
         loadingAddClaimer ? <p>loadinng add claimer</p> :
           <div className={classes.formWrapper}>

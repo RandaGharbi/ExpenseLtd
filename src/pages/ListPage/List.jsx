@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -12,6 +12,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { useValues, useActions } from 'kea';
 import claimLogic from "../../Logic";
+import {
+  Link
+} from "react-router-dom";
 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
@@ -55,13 +58,21 @@ const useStyles = makeStyles({
   },
   stickyHeader: {
     border: '1px solid transparent'
+  },
+  routes:{
+    marginLeft: '56rem',
+    position: 'relative',
+    bottom: '4rem',
+  },
+  link:{
+    textDecoration: 'none',
   }
 });
 
 export default function List() {
   const { claimers, loadingFetchClaimers, claimersNumber } = useValues(claimLogic)
   const { deleteClaimer } = useActions(claimLogic);
-    const classes = useStyles();
+  const classes = useStyles();
   const [page] = React.useState(0);
   const [rowsPerPage] = React.useState(10);
 
@@ -72,6 +83,17 @@ export default function List() {
 
   return (
     <Paper className={classes.root}>
+      <div className={classes.routes}>
+      <Link to="/expense" className={classes.link}>
+      <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+        >
+          Create Claimer
+  </Button>
+ </Link>
+      </div>
       <h1>List Of Claimers</h1>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table" className={classes.stickyHeader}>
@@ -94,29 +116,29 @@ export default function List() {
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                   {columns.map((column) => {
                     const value = row[column.id];
-                    if (column.id=== "actions") {
+                    if (column.id === "actions") {
                       return (
                         <div>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          className={classes.button}
-                          endIcon={<EditIcon />}
-                        >
-                          Edit
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            className={classes.button}
+                            endIcon={<EditIcon />}
+                          >
+                            Edit
                         </Button>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          className={classes.button}
-                          startIcon={<DeleteIcon />}
-                          onClick={() => deleteClaimer({ name: row.name })}
-                        >
-                          Delete
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            className={classes.button}
+                            startIcon={<DeleteIcon />}
+                            onClick={() => deleteClaimer({ name: row.name })}
+                          >
+                            Delete
                         </Button>
-                      </div>
+                        </div>
                       )
-                    } 
+                    }
                     return (
                       <TableCell key={column.id} align={column.align}>
                         {value}
