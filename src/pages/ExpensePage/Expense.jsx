@@ -4,9 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import { useActions, useValues } from 'kea';
@@ -55,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: '70%',
   },
   formWrapper: {
-    position:'relative',
+    position: 'relative',
     top: '6rem',
     textAlign: 'center'
   }
@@ -82,34 +79,26 @@ export default () => {
 
   return (
     <div>
-            <Link to="/" className={classes.link}>
-      <Button
+      <Link to="/" className={classes.link}>
+        <Button
           variant="contained"
           color="primary"
           className={classes.button}
         >
           Back Home
   </Button>
-  </Link>
+      </Link>
       {
         loadingAddClaimer ? <p>loadinng add claimer</p> :
           <div className={classes.formWrapper}>
             <form className={classes.appWrapper}>
-              <FormControl className={classes.formControl}>
-                <Select
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  displayEmpty
-                  className={classes.selectEmpty}
-                >
-                  <MenuItem value="">
-                    <em>Name Of The Claimer</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-              </FormControl>
+              <TextField
+                value={name}
+                onChange={e => setName(e.target.value)}
+                className={classes.margin}
+                id="name"
+                label="Name"
+              />
               <TextField
                 value={date}
                 onChange={e => setDate(e.target.value)}

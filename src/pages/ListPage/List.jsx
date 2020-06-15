@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -9,12 +9,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 import { useValues, useActions } from 'kea';
 import claimLogic from "../../Logic";
 import {
   Link
 } from "react-router-dom";
+import ModalEdit from './components/Modal'
 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
@@ -24,14 +24,12 @@ const columns = [
     label: 'Reason',
     minWidth: 170,
     align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
   },
   {
     id: 'amount',
     label: 'Amount',
     minWidth: 170,
     align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
   },
   {
     id: 'state',
@@ -59,22 +57,23 @@ const useStyles = makeStyles({
   stickyHeader: {
     border: '1px solid transparent'
   },
-  routes:{
+  routes: {
     marginLeft: '56rem',
     position: 'relative',
     bottom: '4rem',
   },
-  link:{
+  link: {
     textDecoration: 'none',
   }
 });
 
 export default function List() {
   const { claimers, loadingFetchClaimers, claimersNumber } = useValues(claimLogic)
-  const { deleteClaimer } = useActions(claimLogic);
+  const { addClaimer } = useActions(claimLogic);
   const classes = useStyles();
   const [page] = React.useState(0);
   const [rowsPerPage] = React.useState(10);
+  const [open] = useState(false);
 
 
   if (loadingFetchClaimers) {
@@ -84,15 +83,24 @@ export default function List() {
   return (
     <Paper className={classes.root}>
       <div className={classes.routes}>
-      <Link to="/expense" className={classes.link}>
-      <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-        >
-          Create Claimer
-  </Button>
- </Link>
+        <Link to="/expense" className={classes.link}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            Create Claimer
+         </Button>
+        </Link>
+        <Link to="/statistic" className={classes.link}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            Go to The statistic Page
+         </Button>
+        </Link>
       </div>
       <h1>List Of Claimers</h1>
       <TableContainer className={classes.container}>
@@ -119,21 +127,20 @@ export default function List() {
                     if (column.id === "actions") {
                       return (
                         <div>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            className={classes.button}
-                            endIcon={<EditIcon />}
-                          >
-                            Edit
-                        </Button>
+                          <ModalEdit open={open}  />
                           <Button
                             variant="contained"
                             color="secondary"
                             className={classes.button}
                             startIcon={<DeleteIcon />}
-                            onClick={() => deleteClaimer({ name: row.name })}
-                          >
+                            onClick={() => {
+                              const newArray = claimers.filter(
+                                item => item.name!== row.name
+                                );
+                                console.log('newArray', newArray)
+                                addClaimer(newArray)   //sync Claimer
+                              }}
+                              >
                             Delete
                         </Button>
                         </div>
