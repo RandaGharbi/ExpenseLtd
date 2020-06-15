@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import { useFormik } from 'formik';
 
 import { useClaimer } from '../../Logic';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -17,10 +18,10 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    position : 'relative',
+    position: 'relative',
     top: '6rem',
     boxShadow: '0px 3px 58px 9px rgba(0,0,0,0.07)',
-    background:' #f9f9f954',
+    background: ' #f9f9f954',
   },
   avatar: {
     margin: theme.spacing(1),
@@ -58,6 +59,7 @@ export default (props) => {
   const isUpdate = props.location && props.location.state && props.location.state.id
   const clamerDataToUpdate = props.location.state || {};
   const classes = useStyles();
+  const history = useHistory();
 
   const { addClaimer, loadingAddClaimer, updateClaimer } = useClaimer();
 
@@ -70,9 +72,10 @@ export default (props) => {
       isApproved: clamerDataToUpdate.isApproved || true
     },
     validate,
-    onSubmit: values => {
-      
+    onSubmit: async values => {
+
       isUpdate ? updateClaimer({ ...clamerDataToUpdate, ...values }) : addClaimer(values);
+      await history.push('/')
     },
   });
   if (loadingAddClaimer) {
@@ -168,13 +171,14 @@ export default (props) => {
                 name="isApproved" />
             }
             label={formik.values.isApproved ? 'Approved' : 'Refused'}
-            />
+          />
           <Button
             type="submit"
             variant="contained"
             color="secondary"
             fullWidth
             className={classes.submit}
+          //href='/'
           >
             {isUpdate ? 'UPDATE' : 'ADD'} CLAIMER
           </Button>
