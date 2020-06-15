@@ -50,6 +50,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     top: '10rem',
     boxShadow: '0px 3px 58px 9px rgba(0,0,0,0.07)',
+    background:' #f9f9f954',
   },
   stickyHeader: {
     border: '1px solid transparent',
@@ -66,7 +67,7 @@ const useStyles = makeStyles(theme => ({
   action:{
     position: 'relative',
     marginTop: '17px',
-    left: '43%',
+    left: '9rem',
   }
 }));
 

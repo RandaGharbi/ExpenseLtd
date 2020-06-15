@@ -17,6 +17,10 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    position : 'relative',
+    top: '6rem',
+    boxShadow: '0px 3px 58px 9px rgba(0,0,0,0.07)',
+    background:' #f9f9f954',
   },
   avatar: {
     margin: theme.spacing(1),

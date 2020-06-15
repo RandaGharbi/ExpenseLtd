@@ -88,12 +88,12 @@ const claimLogic = kea({
     approvedRequestNumber: [
       () => [selectors.claimers],
       claimers => {
-        return claimers.filter(item => item.approved).length;
+        return claimers.filter(item => item.isApproved).length;
       },
     ],
     refusedRequestNumber: [
       () => [selectors.claimers],
-      claimers => claimers.filter(item => !item.approved).length,
+      claimers => claimers.filter(item => !item.isApproved).length,
     ],
     total: [
       () => [selectors.claimers],

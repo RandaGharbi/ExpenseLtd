@@ -9,6 +9,12 @@ import Header from './Header';
 const useStyles = makeStyles({
   content: {
     flexGrow: 1,
+    minHeight: '800px',
+    backgroundImage: `url(${'https://www.lediplomate.tn/wp-content/uploads/2019/05/croissance-courbe.jpg'})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    backgroundAttachment: 'fixed',
+    height: '77rem',
   },
 });
 
