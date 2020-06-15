@@ -66,9 +66,7 @@ export default (props) => {
 						isApproved: clamerDataToUpdate.isApproved || false
     },
     validate,
-    onSubmit: values => {
-    console.log("values", {...clamerDataToUpdate, ...values})
-					
+    onSubmit: values => {					
 					isUpdate ? updateClaimer({...clamerDataToUpdate, ...values}) : addClaimer(values);
     },
   });

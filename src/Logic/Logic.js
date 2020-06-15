@@ -17,7 +17,7 @@ const claimLogic = kea({
       [],
       {
         setClaimers: (state, { claimers }) =>
-          console.log([...state, claimers.data]) || [
+          [
             ...state,
             ...claimers.data,
           ],
@@ -56,7 +56,6 @@ const claimLogic = kea({
       fetchClaimers: async () => {
         try {
           const claimersResult = await api.get('/randagharbi/Claimers');
-          console.log('claimersResult', claimersResult);
           actions.setClaimers(claimersResult);
           actions.setLoadingFetchClaimers(false);
         } catch (error) {

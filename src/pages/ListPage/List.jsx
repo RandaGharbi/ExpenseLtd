@@ -66,7 +66,6 @@ const useStyles = makeStyles({
 
 export default function List() {
   const { claimers, loadingFetchClaimers, deleteClaimer } = useClaimer();
-  console.log("List -> claimers", claimers)
   const classes = useStyles();
   const [page] = React.useState(0);
   const [rowsPerPage] = React.useState(10);
