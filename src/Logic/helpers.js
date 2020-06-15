@@ -18,7 +18,7 @@ export default function useClaimer() {
   };
 
   const updateClaimer = updatedClaimer => {
-    const newClaimers = claimers.reducer((acc, item) => {
+    const newClaimers = claimers.reduce((acc, item) => {
       if (item.id === updatedClaimer.id) {
         return [ ...acc, {id: item.id, ...updatedClaimer}];
       }

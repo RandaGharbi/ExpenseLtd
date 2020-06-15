@@ -70,11 +70,11 @@ export default function List() {
   const classes = useStyles();
   const [page] = React.useState(0);
   const [rowsPerPage] = React.useState(10);
-  
 
   if (loadingFetchClaimers) {
     return <p>loading ... </p>;
   }
+
   return (
     <Paper className={classes.root}>
       <div className={classes.routes}>
