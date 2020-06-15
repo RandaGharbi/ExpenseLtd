@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import EditIcon from '@material-ui/icons/Edit';
 import InputLabel from '@material-ui/core/InputLabel';
+import { useActions, useValues } from 'kea';
+import claimLogic from "../../../Logic";
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -35,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: '200',
     },
     button: {
-        width: '52%'
+        width: '52%',
+        marginTop: '29px',
     },
     edit:{
         width: '25%',
@@ -56,10 +59,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ModalEdit() {
+export default function ModalEdit({ claimer, claimers }) {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const [nameClaimer, setNameClaimer] = useState('');
+    const [dateClaimer, setDateClaimer] = useState('')
+    const [reasonClaimer, setReasonClaimer] = useState('')
+    const [amountClaimer, setAmountClaimer] = useState('')
+    const { syncClaimer } = useActions(claimLogic);
+    const { loadingAddClaimer } = useValues(claimLogic)
 
+    const {
+      name,
+      date,
+      reason,
+      amount
+    } = claimer;
+    const [open, setOpen] = React.useState(false);
     const handleClose = async () => {
         setOpen(false);
     }
@@ -69,13 +84,13 @@ export default function ModalEdit() {
     return (
         <div>
             <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => {
-                    handleOpen();
-                }}
-            >
+              variant="contained"
+              color="primary"
+              className={classes.button}
+               onClick={() => {
+                handleOpen();
+               }}
+               >
                 View Details
              </Button>
             <Modal
@@ -91,23 +106,33 @@ export default function ModalEdit() {
                 }}
             >
                 <Fade in={open} className={classes.Fade}>
-                    <form className={classes.appWrapper}>
+                    {
+                        loadingAddClaimer ? <p>loading ...</p> :
+                        <form className={classes.appWrapper}>
                         <TextField
+                           value={nameClaimer || name}
+                           onChange={e => setNameClaimer(e.target.value)}
                             className={classes.margin}
                             id="name"
                             label="Name"
                         />
                         <TextField
+                            onChange={e => setDateClaimer(e.target.value)}
                             className={classes.margin}
+                            value={dateClaimer || date}
                             id="expense-date"
                             label="Date of The Expense"
                         />
-                        <InputLabel id="demo-simple-select-label" className={classes.label}>Reason</InputLabel>
+                        <InputLabel  id="demo-simple-select-label" className={classes.label}>Reason</InputLabel>
                         <textarea
+                            onChange={e => setReasonClaimer(e.target.value)}
+                           value={reasonClaimer || reason}
                             id="story"
                             name="story"
                             rows="5" cols="33" placeholder="Reason" className={classes.description} />
                         <TextField
+                            onChange={e => setAmountClaimer(e.target.value)}
+                            value={amountClaimer || amount}
                             className={classes.margin}
                             id="Amount"
                             label="€"
@@ -117,24 +142,31 @@ export default function ModalEdit() {
                             color="primary"
                             className={classes.edit}
                             endIcon={<EditIcon />}
-                        /*onClick={() => {
-                            const newArray2 = claimers.map(
-                              item => {
-                                if(item.name===row.name){
-                                  return {
-                                    
-                                  }//return new data updated in form 
-                                }
-                                return item
+                        onClick={() => {
+                            const bodyClaimer = {
+                                name: nameClaimer || name,
+                                date: dateClaimer || date,
+                                reason: reasonClaimer || reason,
+                                amount: amountClaimer || amount, 
+                            }
+                            const newClaimers = claimers.reduce((accumulator, currentValue) => {
+                              if (currentValue.name === name) {
+                                  accumulator.push(bodyClaimer);
+                              } else {
+                                 accumulator.push(currentValue);  
                               }
-                              )
-                            console.log('newArray', newArray2)
-                            addClaimer(newArray2)
-                          }}*/
+                              return accumulator;
+                            },[])
+  
+                            syncClaimer(newClaimers)
+                            handleClose()
+                        }}
                         >
                             Edit
              </Button>
                     </form>
+
+                    }
                 </Fade>
             </Modal>
         </div>

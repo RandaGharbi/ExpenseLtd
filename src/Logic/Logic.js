@@ -6,12 +6,12 @@ import api from '../shared/utils/api'
 const claimLogic = kea({
 
   actions: () => ({
-    addClaimer: claimer => ({ claimer }), // action qui va déclancer le addclaimer listener
+    syncClaimer: claimer => ({ claimer }), // action qui va déclancer le addclaimer listener
     deleteClaimer: name => ({ name }), // action qui va déclancer le addclaimer listener 
     setClaimer: claimer => ({ claimer }),
     setClaimers: claimers => ({ claimers }),
     setLoadingAddCaimer: (loading) => ({ loading }),
-    UpdateClaimer: claimer => ({ claimer }),
+    updateClaimer: claimer => ({ claimer }),
     setLoadingUpdtateCaimer: (loading) => ({ loading }),
     setLoadingFetchClaimers: (loading) => ({ loading }),
     fetchClaimers: () => true, // action qui va déclancer le fetchClaimers listener 
@@ -74,17 +74,18 @@ const claimLogic = kea({
         }
 
     },
-      updateClaimer: async ({ claimer }) => {
+    updateClaimer: async ({ claimer }) => {
+      console.log("update claimer", claimer);
         actions.setLoadingAddCaimer(true)
 
-        const claimerResult = await axios.post('https://jsonbin.org/me/Claimers',
-          { ...claimer }, {
-          headers: {
-            'Authorization': 'token a4cabe58-9e0b-4ff0-bb7f-a731530e1784',
-            'Content-Type': 'application/json'
-          }
-        })
-        actions.setClaimers(claimerResult)
+        // const claimerResult = await axios.post('https://jsonbin.org/me/Claimers',
+        //   { ...claimer }, {
+        //   headers: {
+        //     'Authorization': 'token a4cabe58-9e0b-4ff0-bb7f-a731530e1784',
+        //     'Content-Type': 'application/json'
+        //   }
+        // })
+        // actions.setClaimers(claimerResult)
         actions.setLoadingAddCaimer(false)
       },
     }

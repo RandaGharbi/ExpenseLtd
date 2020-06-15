@@ -17,6 +17,12 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    margin: theme.spacing(1),
+    width: 200,
+  },
   appWrapper: {
     width: '25%',
     height: '35rem',
@@ -55,6 +61,12 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     top: '6rem',
     textAlign: 'center'
+  },
+  img:{
+    position: 'absolute',
+    paddingTop: '10rem',
+    paddingLeft: '6rem',
+    height: '32rem',
   }
 }));
 
@@ -68,7 +80,7 @@ export default () => {
   const [reason, setReason] = useState('')
   const [amount, setAmount] = useState('')
   const { claimers, loadingAddClaimer } = useValues(claimLogic)
-  const { addClaimer } = useActions(claimLogic);
+  const { syncClaimer } = useActions(claimLogic);
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
@@ -79,6 +91,7 @@ export default () => {
 
   return (
     <div>
+      <img src="https://www.rydoo.com/app/uploads/2019/07/support_page_illustrations_team.svg" alt="" className={classes.img}/>
       <Link to="/" className={classes.link}>
         <Button
           variant="contained"
@@ -102,9 +115,14 @@ export default () => {
               <TextField
                 value={date}
                 onChange={e => setDate(e.target.value)}
-                className={classes.margin}
-                id="expense-date"
+                id="date"
                 label="Date of The Expense"
+                type="date"
+                defaultValue="2017-05-24"
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
               <InputLabel id="demo-simple-select-label" className={classes.label}>Reason</InputLabel>
               <textarea
@@ -129,7 +147,7 @@ export default () => {
             </form>
             <Button
               onClick={() => {
-                addClaimer([...claimers, { // dispatch action in claimLogic actions 
+                syncClaimer([...claimers, { // dispatch action in claimLogic actions 
                   name,
                   date,
                   reason,

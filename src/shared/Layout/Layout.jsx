@@ -9,11 +9,6 @@ import Header from './Header';
 const useStyles = makeStyles({
   content: {
     flexGrow: 1,
-    minHeight: '800px',
-    // backgroundImage: `url(${'https://c8.alamy.com/comp/KF05RG/monthly-budget-family-income-profit-and-expense-background-KF05RG.jpg'})`,
-    backgroundRepeat: 'no-repeat', 
-    backgroundSize: 'cover',
-    backgroundAttachment: 'fixed'
   },
 });
 

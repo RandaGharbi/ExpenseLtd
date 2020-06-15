@@ -58,18 +58,21 @@ const useStyles = makeStyles({
     border: '1px solid transparent'
   },
   routes: {
-    marginLeft: '56rem',
+    marginLeft: '71rem',
     position: 'relative',
-    bottom: '4rem',
+    bottom: '9rem',
   },
   link: {
     textDecoration: 'none',
+  },
+  button:{
+    marginTop: '32px',
   }
 });
 
 export default function List() {
   const { claimers, loadingFetchClaimers, claimersNumber } = useValues(claimLogic)
-  const { addClaimer } = useActions(claimLogic);
+  const { syncClaimer } = useActions(claimLogic);
   const classes = useStyles();
   const [page] = React.useState(0);
   const [rowsPerPage] = React.useState(10);
@@ -124,10 +127,11 @@ export default function List() {
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                   {columns.map((column) => {
                     const value = row[column.id];
+                    console.log("row", row)
                     if (column.id === "actions") {
                       return (
                         <div>
-                          <ModalEdit open={open}  />
+                          <ModalEdit open={open} claimer={row} claimers={claimers}  />
                           <Button
                             variant="contained"
                             color="secondary"
@@ -138,7 +142,7 @@ export default function List() {
                                 item => item.name!== row.name
                                 );
                                 console.log('newArray', newArray)
-                                addClaimer(newArray)   //sync Claimer
+                                syncClaimer(newArray)   //sync Claimer
                               }}
                               >
                             Delete
