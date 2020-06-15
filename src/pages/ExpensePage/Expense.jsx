@@ -41,7 +41,7 @@ const validate = values => {
   }
   if (!values.reason) {
     errors.reason = 'Veuillez remplir ce champs';
-		}
+  }
 
   if (!values.amount) {
     errors.amount = 'Veuillez remplir ce champs';
@@ -51,8 +51,8 @@ const validate = values => {
 };
 
 export default (props) => {
-		const isUpdate = props.location && props.location.state && props.location.state.id
-		const clamerDataToUpdate =  props.location.state || {};
+  const isUpdate = props.location && props.location.state && props.location.state.id
+  const clamerDataToUpdate = props.location.state || {};
   const classes = useStyles();
 
   const { addClaimer, loadingAddClaimer, updateClaimer } = useClaimer();
@@ -61,13 +61,14 @@ export default (props) => {
     initialValues: {
       name: clamerDataToUpdate.name || '',
       date: clamerDataToUpdate.date || '',
-						reason: clamerDataToUpdate.reason || '',
-						amount: clamerDataToUpdate.amount || 0,
-						isApproved: clamerDataToUpdate.isApproved || false
+      reason: clamerDataToUpdate.reason || '',
+      amount: clamerDataToUpdate.amount || 0,
+      isApproved: clamerDataToUpdate.isApproved || true
     },
     validate,
-    onSubmit: values => {					
-					isUpdate ? updateClaimer({...clamerDataToUpdate, ...values}) : addClaimer(values);
+    onSubmit: values => {
+      
+      isUpdate ? updateClaimer({ ...clamerDataToUpdate, ...values }) : addClaimer(values);
     },
   });
   if (loadingAddClaimer) {
@@ -83,7 +84,7 @@ export default (props) => {
           </Button>
         </Paper>
         <Typography component="h1" variant="h5">
-           {isUpdate ? 'UPDATE' : 'ADD'} CLAIMER
+          {isUpdate ? 'UPDATE' : 'ADD'} CLAIMER
         </Typography>
         <form
           className={classes.form}
@@ -155,23 +156,23 @@ export default (props) => {
             helperText={formik.touched.amount ? formik.errors.amount : ''}
             error={formik.touched.amount && Boolean(formik.errors.amount)}
           />
-										 <FormControlLabel
-													control={
-													<Switch
-													 checked={formik.values.isApproved}
-              onChange={formik.handleChange}
-														name="isApproved" />
-													}
-													label={formik.values.isApproved ? 'Approved' : 'Refused'}
-											/>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={formik.values.isApproved}
+                onChange={formik.handleChange}
+                name="isApproved" />
+            }
+            label={formik.values.isApproved ? 'Approved' : 'Refused'}
+            />
           <Button
             type="submit"
             variant="contained"
-												color="secondary"
-												fullWidth
+            color="secondary"
+            fullWidth
             className={classes.submit}
           >
-             {isUpdate ? 'UPDATE' : 'ADD'} CLAIMER
+            {isUpdate ? 'UPDATE' : 'ADD'} CLAIMER
           </Button>
         </form>
       </div>

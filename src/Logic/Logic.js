@@ -17,7 +17,7 @@ const claimLogic = kea({
       [],
       {
         setClaimers: (state, { claimers }) =>
-          [
+           [
             ...state,
             ...claimers.data,
           ],
@@ -93,9 +93,13 @@ const claimLogic = kea({
     ],
     refusedRequestNumber: [
       () => [selectors.claimers],
-      claimers => {
-        return claimers.filter(item => !item.approved).length;
-      },
+      claimers => claimers.filter(item => !item.approved).length,
+    ],
+    total: [
+      () => [selectors.claimers],
+      claimers => claimers.reduce((acc, current) => {
+       return acc + current.amount
+      }, 0)
     ],
   }),
 });

@@ -18,7 +18,7 @@ export default function useClaimer() {
   };
 
   const updateClaimer = updatedClaimer => {
-    const newClaimers = claimers.reduce((acc, item) => {
+    const newClaimers = claimers.reducer((acc, item) => {
       if (item.id === updatedClaimer.id) {
         return [ ...acc, {id: item.id, ...updatedClaimer}];
       }
@@ -27,6 +27,35 @@ export default function useClaimer() {
     syncClaimer(newClaimers);
   };
 
+  const calculateStatistic = (
+    requestNumber,
+    approvedRequestNumber,
+    refusedRequestNumber,
+    total,
+    ) => ({
+        labels: [
+          'request number',
+          'approved request number',
+          'refused request number',
+          'total rembouressement '
+        ],
+        datasets: [{
+          data: [requestNumber, approvedRequestNumber, refusedRequestNumber, total],
+          backgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#008000'
+          ],
+          hoverBackgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#008000'
+          ]
+        }]
+    });
+
   return {
     claimers,
     addClaimer,
@@ -34,5 +63,6 @@ export default function useClaimer() {
     updateClaimer,
     loadingAddClaimer,
     loadingFetchClaimers,
+    calculateStatistic,
   };
 }

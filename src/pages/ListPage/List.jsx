@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -12,6 +13,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { useClaimer } from '../../Logic';
 import { Link } from 'react-router-dom';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import * as ROOT from '../../constants/routes' 
 const columns = [
@@ -32,24 +35,21 @@ const columns = [
     format: value => value.toLocaleString('en-US'),
   },
   {
-    id: 'state',
+    id: 'Approved/Refused',
     label: 'Approved/Refused',
     minWidth: 170,
     align: 'right',
   },
-  { id: 'actions', label: 'Actions', minWidth: 100 },
+  { id: 'actions', label: 'Actions', minWidth: 100, align: 'right' },
 ];
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
-    width: '84%',
+    width: '95%',
     margin: 'auto',
     position: 'relative',
     top: '10rem',
     boxShadow: '0px 3px 58px 9px rgba(0,0,0,0.07)',
-  },
-  container: {
-    maxHeight: 440,
   },
   stickyHeader: {
     border: '1px solid transparent',
@@ -61,8 +61,14 @@ const useStyles = makeStyles({
   },
   link: {
     textDecoration: 'none',
+    margin: theme.spacing(1),
   },
-});
+  action:{
+    position: 'relative',
+    marginTop: '17px',
+    left: '43%',
+  }
+}));
 
 export default function List() {
   const { claimers, loadingFetchClaimers, deleteClaimer } = useClaimer();
@@ -84,6 +90,15 @@ export default function List() {
             className={classes.button}
           >
             Create Claimer
+          </Button>
+        </Link>
+        <Link to="/statistic" className={classes.link}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+           Check Statistic
           </Button>
         </Link>
       </div>
@@ -117,7 +132,7 @@ export default function List() {
                       const value = row[column.id];
                       if (column.id === 'actions') {
                         return (
-                          <div>
+                          <div className={classes.action} key={column.id}>
                             <Link to={{
                                 pathname: ROOT.EXPENSE,
                                 state: {
@@ -144,10 +159,16 @@ export default function List() {
                             </Button>
                           </div>
                         );
-                      }
+                      } 
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          {value}
+                          {
+                            column.id === 'Approved/Refused' ? 
+                              <FormControlLabel
+                              control={<Checkbox color={row.isApproved ? "primary ": "Secondary"} checked name="checkedG" />}
+                              label=""
+                            /> : value
+                            }
                         </TableCell>
                       );
                     })}

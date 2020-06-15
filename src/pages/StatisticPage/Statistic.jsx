@@ -1,62 +1,19 @@
-import React, { useState } from 'react';
-import HighchartsReact from 'highcharts-react-official';
-import Highcharts from 'highcharts';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react';
+import {Pie} from 'react-chartjs-2';
 
-const useStyles = makeStyles({
-  root: {
-    paddingTop: '13rem',
-  },
-});
+import { useValues } from 'kea';
+import claimLogic from '../../Logic';
+import { useClaimer } from '../../Logic';
+
 const StatisticPage = () => {
-  const [hoverData, setHoverData] = useState(null);
-  const [hoveredOverCategories, setHoveredOverCategories] = useState([]);
-  const [chartOptions] = useState({
-    xAxis: {
-      categories: [
-        'number of requests',
-        'request accepted',
-        'request refused',
-        'total to be reimbursed',
-      ],
-    },
-    title: {
-      text: 'Expense Statistic',
-    },
-    series: [
-      {
-        type: 'column',
-        data: [1, 2, 3, 4],
-      },
-    ],
-    plotOptions: {
-      series: {
-        point: {
-          events: {
-            mouseOver(e) {
-              console.log(hoveredOverCategories);
-              setHoverData(e.target.category);
-              setHoveredOverCategories([
-                ...hoveredOverCategories,
-                e.target.category,
-              ]);
-            },
-          },
-        },
-      },
-    },
-  });
-  const classes = useStyles();
-  return (
-    <div className={classes.root}>
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-      <h3>Hovering over {hoverData}</h3>
-      <ol>
-        {hoveredOverCategories.map(category => (
-          <li>Hovered over {category}</li>
-        ))}
-      </ol>
-    </div>
-  );
-};
-export default StatisticPage;
+  const { requestNumber, approvedRequestNumber, refusedRequestNumber, total } = useValues(claimLogic);
+  const { calculateStatistic } = useClaimer();
+  const data = calculateStatistic(requestNumber,approvedRequestNumber, refusedRequestNumber, total);
+
+    return (
+      <div>
+        <Pie data={data} />
+      </div>
+    );
+  };
+  export default StatisticPage;
