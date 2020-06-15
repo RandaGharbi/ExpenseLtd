@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -9,13 +9,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useValues, useActions } from 'kea';
-import claimLogic from "../../Logic";
-import {
-  Link
-} from "react-router-dom";
-import ModalEdit from './components/Modal'
+import EditIcon from '@material-ui/icons/Edit';
+import { useClaimer } from '../../Logic';
+import { Link } from 'react-router-dom';
 
+import * as ROOT from '../../constants/routes' 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
   { id: 'date', label: 'Date', minWidth: 100 },
@@ -24,12 +22,14 @@ const columns = [
     label: 'Reason',
     minWidth: 170,
     align: 'right',
+    format: value => value.toLocaleString('en-US'),
   },
   {
     id: 'amount',
     label: 'Amount',
     minWidth: 170,
     align: 'right',
+    format: value => value.toLocaleString('en-US'),
   },
   {
     id: 'state',
@@ -38,10 +38,7 @@ const columns = [
     align: 'right',
   },
   { id: 'actions', label: 'Actions', minWidth: 100 },
-
 ];
-
-
 
 const useStyles = makeStyles({
   root: {
@@ -55,34 +52,29 @@ const useStyles = makeStyles({
     maxHeight: 440,
   },
   stickyHeader: {
-    border: '1px solid transparent'
+    border: '1px solid transparent',
   },
   routes: {
-    marginLeft: '71rem',
+    marginLeft: '56rem',
     position: 'relative',
-    bottom: '9rem',
+    bottom: '4rem',
   },
   link: {
     textDecoration: 'none',
   },
-  button:{
-    marginTop: '32px',
-  }
 });
 
 export default function List() {
-  const { claimers, loadingFetchClaimers, claimersNumber } = useValues(claimLogic)
-  const { syncClaimer } = useActions(claimLogic);
+  const { claimers, loadingFetchClaimers, deleteClaimer } = useClaimer();
+  console.log("List -> claimers", claimers)
   const classes = useStyles();
   const [page] = React.useState(0);
   const [rowsPerPage] = React.useState(10);
-  const [open] = useState(false);
-
+  
 
   if (loadingFetchClaimers) {
-    return <p>loading ... </p>
+    return <p>loading ... </p>;
   }
-
   return (
     <Paper className={classes.root}>
       <div className={classes.routes}>
@@ -93,24 +85,19 @@ export default function List() {
             className={classes.button}
           >
             Create Claimer
-         </Button>
-        </Link>
-        <Link to="/statistic" className={classes.link}>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-          >
-            Go to The statistic Page
-         </Button>
+          </Button>
         </Link>
       </div>
       <h1>List Of Claimers</h1>
       <TableContainer className={classes.container}>
-        <Table stickyHeader aria-label="sticky table" className={classes.stickyHeader}>
+        <Table
+          stickyHeader
+          aria-label="sticky table"
+          className={classes.stickyHeader}
+        >
           <TableHead>
             <TableRow>
-              {columns.map((column) => (
+              {columns.map(column => (
                 <TableCell
                   key={column.id}
                   align={column.align}
@@ -122,43 +109,52 @@ export default function List() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {claimers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    console.log("row", row)
-                    if (column.id === "actions") {
-                      return (
-                        <div>
-                          <ModalEdit open={open} claimer={row} claimers={claimers}  />
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            className={classes.button}
-                            startIcon={<DeleteIcon />}
-                            onClick={() => {
-                              const newArray = claimers.filter(
-                                item => item.name!== row.name
-                                );
-                                console.log('newArray', newArray)
-                                syncClaimer(newArray)   //sync Claimer
-                              }}
+            {claimers
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map(row => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                    {columns.map(column => {
+                      const value = row[column.id];
+                      if (column.id === 'actions') {
+                        return (
+                          <div>
+                            <Link to={{
+                                pathname: ROOT.EXPENSE,
+                                state: {
+                                  ...row
+                                }
+                              }}>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                className={classes.button}
+                                endIcon={<EditIcon />}
                               >
-                            Delete
-                        </Button>
-                        </div>
-                      )
-                    }
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
+                                Edit
+                              </Button>
+                            </Link>
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              className={classes.button}
+                              startIcon={<DeleteIcon />}
+                              onClick={() => deleteClaimer(row)}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        );
+                      }
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          {value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>

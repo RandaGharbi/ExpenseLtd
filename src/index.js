@@ -3,25 +3,22 @@ import ReactDOM from 'react-dom';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { resetContext, getContext } from 'kea'; 
+import { resetContext, getContext } from 'kea';
 import { Provider } from 'react-redux';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 
-export const history = createBrowserHistory()
-
+export const history = createBrowserHistory();
 
 resetContext({
   createStore: {
-    middleware: [
-      routerMiddleware(history)
-    ],
+    middleware: [routerMiddleware(history)],
     reducers: {
-      router: connectRouter(history)
-    }
+      router: connectRouter(history),
+    },
   },
-  plugins: []
-})
+  plugins: [],
+});
 ReactDOM.render(
   <Provider store={getContext().store}>
     <App />

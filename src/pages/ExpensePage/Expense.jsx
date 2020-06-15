@@ -1,162 +1,182 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import FormGroup from '@material-ui/core/FormGroup';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
-import InputLabel from '@material-ui/core/InputLabel';
-import { useActions, useValues } from 'kea';
-import claimLogic from "../../Logic";
-import {
-  Link
-} from "react-router-dom";
+import Paper from '@material-ui/core/Paper';
+import { useFormik } from 'formik';
 
+import { useClaimer } from '../../Logic';
 
-const useStyles = makeStyles((theme) => ({
-  margin: {
+const useStyles = makeStyles(theme => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
     margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
   },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    margin: theme.spacing(1),
-    width: 200,
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
   },
-  appWrapper: {
-    width: '25%',
-    height: '35rem',
-    margin: 'auto',
-    border: '1px solid #0000002e'
+  submit: {
+    margin: theme.spacing(3, 0, 2),
   },
-  switch: {
-    paddingTop: '4rem',
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  description: {
-    resize: 'none',
-    background: 'none',
-    border: '1px solid #0000007a',
-    paddingTop: '70px',
-    marginTop: '15px',
-    width: '65%',
-    textAlign: 'center'
-  },
-  label: {
-    paddingLeft: '8px',
-    paddingTop: '20px',
-    color: 'black',
-    fontWeight: '200',
-  },
-  button: {
-    marginLeft: '70%',
-  },
-  formWrapper: {
-    position: 'relative',
-    top: '6rem',
-    textAlign: 'center'
-  },
-  img:{
-    position: 'absolute',
-    paddingTop: '10rem',
-    paddingLeft: '6rem',
-    height: '32rem',
-  }
 }));
 
+const validate = values => {
+  const errors = {};
+  if (!values.name) {
+    errors.name = 'Veuillez remplir ce champs';
+  }
+  if (!values.date) {
+    errors.date = 'Veuillez remplir ce champs';
+  }
+  if (!values.reason) {
+    errors.reason = 'Veuillez remplir ce champs';
+		}
 
-export default () => {
+  if (!values.amount) {
+    errors.amount = 'Veuillez remplir ce champs';
+  }
 
+  return errors;
+};
+
+export default (props) => {
+		const isUpdate = props.location && props.location.state && props.location.state.id
+		const clamerDataToUpdate =  props.location.state || {};
   const classes = useStyles();
-  const [state, setState] = useState({ Approved: true, Refused: false });
-  const [name, setName] = useState('');
-  const [date, setDate] = useState('')
-  const [reason, setReason] = useState('')
-  const [amount, setAmount] = useState('')
-  const { claimers, loadingAddClaimer } = useValues(claimLogic)
-  const { syncClaimer } = useActions(claimLogic);
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
+  const { addClaimer, loadingAddClaimer, updateClaimer } = useClaimer();
 
-  console.log("claimers", claimers)
-
+  const formik = useFormik({
+    initialValues: {
+      name: clamerDataToUpdate.name || '',
+      date: clamerDataToUpdate.date || '',
+						reason: clamerDataToUpdate.reason || '',
+						amount: clamerDataToUpdate.amount || 0,
+						isApproved: clamerDataToUpdate.isApproved || false
+    },
+    validate,
+    onSubmit: values => {
+    console.log("values", {...clamerDataToUpdate, ...values})
+					
+					isUpdate ? updateClaimer({...clamerDataToUpdate, ...values}) : addClaimer(values);
+    },
+  });
+  if (loadingAddClaimer) {
+    return <p>loadinng {isUpdate ? 'update' : 'add'} claimer</p>;
+  }
 
   return (
-    <div>
-      <img src="https://www.rydoo.com/app/uploads/2019/07/support_page_illustrations_team.svg" alt="" className={classes.img}/>
-      <Link to="/" className={classes.link}>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
+    <Container component="main" maxWidth="xs">
+      <div className={classes.paper}>
+        <Paper>
+          <Button type="submit" variant="contained" color="primary" href="/">
+            Back Home
+          </Button>
+        </Paper>
+        <Typography component="h1" variant="h5">
+           {isUpdate ? 'UPDATE' : 'ADD'} CLAIMER
+        </Typography>
+        <form
+          className={classes.form}
+          noValidate
+          onSubmit={formik.handleSubmit}
         >
-          Back Home
-  </Button>
-      </Link>
-      {
-        loadingAddClaimer ? <p>loadinng add claimer</p> :
-          <div className={classes.formWrapper}>
-            <form className={classes.appWrapper}>
-              <TextField
-                value={name}
-                onChange={e => setName(e.target.value)}
-                className={classes.margin}
-                id="name"
-                label="Name"
-              />
-              <TextField
-                value={date}
-                onChange={e => setDate(e.target.value)}
-                id="date"
-                label="Date of The Expense"
-                type="date"
-                defaultValue="2017-05-24"
-                className={classes.textField}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <InputLabel id="demo-simple-select-label" className={classes.label}>Reason</InputLabel>
-              <textarea
-                value={reason}
-                onChange={e => setReason(e.target.value)}
-                id="story"
-                name="story"
-                rows="5" cols="33" placeholder="Reason" className={classes.description} />
-              <TextField
-                value={amount}
-                onChange={e => setAmount(e.target.value)}
-                className={classes.margin}
-                id="Amount"
-                label="€"
-              />
-              <FormGroup className={classes.switch}>
-                <FormControlLabel
-                  control={<Switch checked={state.gilad} onChange={handleChange} name="Approved" />}
-                  label="Expense Approved"
-                />
-              </FormGroup>
-            </form>
-            <Button
-              onClick={() => {
-                syncClaimer([...claimers, { // dispatch action in claimLogic actions 
-                  name,
-                  date,
-                  reason,
-                  amount,
-                }])
-              }}
-              variant="contained" className={classes.costum} type="submit" color="primary">add claimer</Button>
-          </div>
-      }
-    </div>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="Nom & Prenom"
+            name="name"
+            autoComplete="name"
+            autoFocus
+            onChange={formik.handleChange}
+            value={formik.values.name}
+            helperText={formik.touched.name ? formik.errors.name : ''}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="date"
+            label="Date "
+            type="date"
+            id="date"
+            onChange={formik.handleChange}
+            value={formik.values.date}
+            helperText={formik.touched.date ? formik.errors.date : ''}
+            error={formik.touched.date && Boolean(formik.errors.date)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="reason"
+            label="Reason "
+            id="date"
+            onChange={formik.handleChange}
+            value={formik.values.reason}
+            helperText={formik.touched.reason ? formik.errors.reason : ''}
+            error={formik.touched.reason && Boolean(formik.errors.reason)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            multiline
+            rows={4}
+            placeholder="Reason ..."
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="amount"
+            label="Amount"
+            type="number"
+            id="amount"
+            onChange={formik.handleChange}
+            value={formik.values.amount}
+            helperText={formik.touched.amount ? formik.errors.amount : ''}
+            error={formik.touched.amount && Boolean(formik.errors.amount)}
+          />
+										 <FormControlLabel
+													control={
+													<Switch
+													 checked={formik.values.isApproved}
+              onChange={formik.handleChange}
+														name="isApproved" />
+													}
+													label={formik.values.isApproved ? 'Approved' : 'Refused'}
+											/>
+          <Button
+            type="submit"
+            variant="contained"
+												color="secondary"
+												fullWidth
+            className={classes.submit}
+          >
+             {isUpdate ? 'UPDATE' : 'ADD'} CLAIMER
+          </Button>
+        </form>
+      </div>
+    </Container>
   );
 };

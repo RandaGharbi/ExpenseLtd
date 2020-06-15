@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar } from '@material-ui/core';
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
   },
@@ -10,8 +10,8 @@ const useStyles = makeStyles((theme) => ({
   },
   appName: {
     textAlign: 'center',
-    textTransform: 'uppercase'
-  }
+    textTransform: 'uppercase',
+  },
 }));
 
 export default () => {
