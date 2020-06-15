@@ -45,13 +45,13 @@ export default function useClaimer() {
           '#FF6384',
           '#36A2EB',
           '#FFCE56',
-          '#008000'
+          '#bce6bc5e'
           ],
           hoverBackgroundColor: [
           '#FF6384',
           '#36A2EB',
           '#FFCE56',
-          '#008000'
+          '#bce6bc5e'
           ]
         }]
     });
