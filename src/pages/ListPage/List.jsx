@@ -15,8 +15,10 @@ import { useClaimer } from '../../Logic';
 import { Link } from 'react-router-dom';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
+import AddIcon from '@material-ui/icons/Add';
 
-import * as ROOT from '../../constants/routes' 
+import * as ROOT from '../../constants/routes'
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
   { id: 'date', label: 'Date', minWidth: 100 },
@@ -40,7 +42,7 @@ const columns = [
     minWidth: 170,
     align: 'right',
   },
-  { id: 'actions', label: 'Actions', minWidth: 100, align: 'right' },
+  { id: 'actions', label: 'Actions', minWidth: 100 },
 ];
 
 const useStyles = makeStyles(theme => ({
@@ -50,7 +52,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     top: '10rem',
     boxShadow: '0px 3px 58px 9px rgba(0,0,0,0.07)',
-    background:' #f9f9f954',
+    background: ' #f9f9f954',
   },
   stickyHeader: {
     border: '1px solid transparent',
@@ -64,11 +66,14 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'none',
     margin: theme.spacing(1),
   },
-  action:{
+  action: {
     position: 'relative',
     marginTop: '17px',
-    left: '9rem',
-  }
+  },
+
+  container: {
+    maxHeight: '30%',
+  },
 }));
 
 export default function List() {
@@ -88,6 +93,7 @@ export default function List() {
           <Button
             variant="contained"
             color="primary"
+            endIcon={<AddIcon />}
             className={classes.button}
           >
             Create Claimer
@@ -97,9 +103,11 @@ export default function List() {
           <Button
             variant="contained"
             color="primary"
+            endIcon={<EqualizerIcon />}
             className={classes.button}
           >
-           Check Statistic
+
+            Check Statistic
           </Button>
         </Link>
       </div>
@@ -133,13 +141,13 @@ export default function List() {
                       const value = row[column.id];
                       if (column.id === 'actions') {
                         return (
-                          <div className={classes.action} key={column.id}>
+                          <td className={classes.action} key={column.id}>
                             <Link to={{
-                                pathname: ROOT.EXPENSE,
-                                state: {
-                                  ...row
-                                }
-                              }}>
+                              pathname: ROOT.EXPENSE,
+                              state: {
+                                ...row
+                              }
+                            }}>
                               <Button
                                 variant="contained"
                                 color="primary"
@@ -158,18 +166,22 @@ export default function List() {
                             >
                               Delete
                             </Button>
-                          </div>
+                          </td>
                         );
-                      } 
+                      }
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {
-                            column.id === 'Approved/Refused' ? 
+                            column.id === 'Approved/Refused' ?
                               <FormControlLabel
-                              control={<Checkbox color={row.isApproved ? "primary ": "Secondary"} checked name="checkedG" />}
-                              label=""
-                            /> : value
-                            }
+                                control={     
+                                  <Checkbox
+                                  defaultChecked
+                                  color={row.isApproved ? "primary " : "secondary"}
+                                />}
+                                label=""
+                              /> : value
+                          }
                         </TableCell>
                       );
                     })}

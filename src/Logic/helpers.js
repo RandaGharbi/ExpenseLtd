@@ -28,19 +28,15 @@ export default function useClaimer() {
   };
 
   const calculateStatistic = (
-    requestNumber,
     approvedRequestNumber,
     refusedRequestNumber,
-    total,
     ) => ({
         labels: [
-          'request number',
           'approved request number',
           'refused request number',
-          'total rembouressement '
         ],
         datasets: [{
-          data: [requestNumber, approvedRequestNumber, refusedRequestNumber, total],
+          data: [approvedRequestNumber, refusedRequestNumber],
           backgroundColor: [
           '#FF6384',
           '#36A2EB',

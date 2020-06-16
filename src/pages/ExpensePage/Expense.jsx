@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import { useFormik } from 'formik';
 
 import { useClaimer } from '../../Logic';
@@ -85,11 +84,6 @@ export default (props) => {
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
-        <Paper>
-          <Button type="submit" variant="contained" color="primary" href="/">
-            Back Home
-          </Button>
-        </Paper>
         <Typography component="h1" variant="h5">
           {isUpdate ? 'UPDATE' : 'ADD'} CLAIMER
         </Typography>
@@ -178,7 +172,6 @@ export default (props) => {
             color="secondary"
             fullWidth
             className={classes.submit}
-          //href='/'
           >
             {isUpdate ? 'UPDATE' : 'ADD'} CLAIMER
           </Button>
