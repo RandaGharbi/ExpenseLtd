@@ -9,7 +9,7 @@ import { useClaimer } from '../../Logic';
 import HomeIcon from '@material-ui/icons/Home';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   root: {
     position: 'relative',
     top: '3rem'
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   element:{
     margin: '2rem'
   }
-}));
+});
 
 const StatisticPage = () => {
   const classes = useStyles();
